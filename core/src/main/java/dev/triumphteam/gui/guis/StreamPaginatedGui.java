@@ -37,10 +37,7 @@ public class StreamPaginatedGui extends PaginatedGui {
     public int getExpectedMaxItems() {
         int cells = getRows() * 9;
         Map<Integer, GuiItem> staticItems = getGuiItems();
-        System.out.println("staticItems: " + staticItems.size());
-        int available = cells - staticItems.size();
-        System.out.println("available (max): " + available);
-        return available;
+        return cells - staticItems.size();
     }
 
     @Override
