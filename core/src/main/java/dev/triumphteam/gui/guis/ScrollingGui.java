@@ -205,7 +205,7 @@ public class ScrollingGui extends PaginatedGui {
     /**
      * Fills the page with the items
      */
-    private void populatePage() {
+    protected void populatePage() {
         // Adds the paginated items to the page
         for (final GuiItem guiItem : getPage(getPageNum())) {
             if (scrollType == ScrollType.HORIZONTAL) {

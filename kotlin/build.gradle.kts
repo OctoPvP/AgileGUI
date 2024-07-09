@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":triumph-gui"))
+    implementation(project(":agile-gui"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 

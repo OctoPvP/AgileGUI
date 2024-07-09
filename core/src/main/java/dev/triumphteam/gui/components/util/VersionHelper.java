@@ -92,6 +92,20 @@ public final class VersionHelper {
     private static final boolean IS_PAPER = checkPaper();
     public static final boolean IS_FOLIA = checkFolia();
 
+    public static final boolean IS_ITEM_BYTES_API;
+
+    static {
+        boolean IS_ITEM_BYTES_API1 = false;
+        if (IS_PAPER) {
+            try {
+                Class.forName("org.bukkit.inventory.ItemStack").getMethod("deserializeBytes", byte[].class);
+                IS_ITEM_BYTES_API1 = true;
+            } catch (NoSuchMethodException | ClassNotFoundException ignored) {}
+        }
+        IS_ITEM_BYTES_API = IS_ITEM_BYTES_API1;
+    }
+
+
     /**
      * Check if the server has access to the Paper API
      * Taken from <a href="https://github.com/PaperMC/PaperLib">PaperLib</a>

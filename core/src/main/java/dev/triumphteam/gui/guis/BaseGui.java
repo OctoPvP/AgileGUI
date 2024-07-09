@@ -1049,4 +1049,9 @@ public abstract class BaseGui implements InventoryHolder {
         throw new GuiException("Slot " + slot + " is not valid for the gui type - " + guiType.name() + "!");
     }
 
+    public void clear() {
+        this.guiItems.clear();
+        this.slotActions.clear();
+        this.inventory.clear();
+    }
 }

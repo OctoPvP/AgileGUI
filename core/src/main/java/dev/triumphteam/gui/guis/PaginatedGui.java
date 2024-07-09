@@ -24,6 +24,8 @@
 package dev.triumphteam.gui.guis;
 
 import dev.triumphteam.gui.components.InteractionModifier;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -47,12 +49,25 @@ import java.util.Set;
 public class PaginatedGui extends BaseGui {
 
     // List with all the page items
-    private final List<GuiItem> pageItems = new ArrayList<>();
+    protected final List<GuiItem> pageItems = new ArrayList<>();
     // Saves the current page items and it's slot
-    private final Map<Integer, GuiItem> currentPage;
+    protected final Map<Integer, GuiItem> currentPage;
 
-    private int pageSize;
-    private int pageNum = 1;
+    protected int pageSize;
+    /**
+     * -- GETTER --
+     *  Gets the page number
+     *
+     *
+     * -- SETTER --
+     *  Sets the page number
+     *
+     @return The current page number
+      * @param pageNum Sets the current page to be the specified number
+     */
+    @Setter
+    @Getter
+    protected int pageNum = 1;
 
     /**
      * Main constructor to provide a way to create PaginatedGui
@@ -376,7 +391,18 @@ public class PaginatedGui extends BaseGui {
      * @param givenPage The page to get
      * @return A list with all the page items
      */
-    private List<GuiItem> getPageNum(final int givenPage) {
+    public List<GuiItem> getPageNum(final int givenPage) {
+        return getPageNum(givenPage, pageItems);
+    }
+
+    /**
+     * Gets the items given page number and the page items
+     *
+     * @param givenPage The page to get
+     * @param pageItems The page items
+     * @return A list with all the page items
+     */
+    public List<GuiItem> getPageNum(final int givenPage, List<GuiItem> pageItems) {
         final int page = givenPage - 1;
 
         final List<GuiItem> guiPage = new ArrayList<>();
@@ -387,7 +413,6 @@ public class PaginatedGui extends BaseGui {
         for (int i = page * pageSize; i < max; i++) {
             guiPage.add(pageItems.get(i));
         }
-
         return guiPage;
     }
 
@@ -403,7 +428,7 @@ public class PaginatedGui extends BaseGui {
     /**
      * Populates the inventory with the page items
      */
-    private void populatePage() {
+    protected void populatePage() {
         // Adds the paginated items to the page
         int slot = 0;
         final Iterator<GuiItem> iterator = getPageNum(pageNum).iterator();
@@ -459,24 +484,6 @@ public class PaginatedGui extends BaseGui {
      */
     int getPageSize() {
         return pageSize;
-    }
-
-    /**
-     * Gets the page number
-     *
-     * @return The current page number
-     */
-    int getPageNum() {
-        return pageNum;
-    }
-
-    /**
-     * Sets the page number
-     *
-     * @param pageNum Sets the current page to be the specified number
-     */
-    public void setPageNum(final int pageNum) {
-        this.pageNum = pageNum;
     }
 
     /**

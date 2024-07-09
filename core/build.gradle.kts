@@ -1,6 +1,7 @@
 plugins {
     `maven-publish`
     signing
+    id("io.freefair.lombok") version "8.6"
 }
 
 repositories {
@@ -47,9 +48,9 @@ tasks {
                     }
                 }
                 pom {
-                    name.set("Triumph GUI")
+                    name.set("Agile GUI")
                     description.set("Library for easy creation of GUIs for Bukkit plugins.")
-                    url.set("https://github.com/TriumphTeam/triumph-gui")
+                    url.set("https://github.com/OctoPvP/AgileGUI")
 
                     licenses {
                         license {
@@ -60,40 +61,31 @@ tasks {
 
                     developers {
                         developer {
-                            id.set("matt")
-                            name.set("Mateus Moreira")
-                            organization.set("TriumphTeam")
-                            organizationUrl.set("https://github.com/TriumphTeam")
+                            id.set("badbird5907")
+                            name.set("Evan Yu")
+                            organization.set("OctoMC")
+                            organizationUrl.set("https://github.com/OctoPvP")
                         }
                     }
 
                     scm {
-                        connection.set("scm:git:git://github.com/TriumphTeam/triumph-gui.git")
-                        developerConnection.set("scm:git:ssh://github.com:TriumphTeam/triumph-gui.git")
-                        url.set("https://github.com/TriumphTeam/triumph-gui")
+                        connection.set("scm:git:git://github.com/OctoPvP/AgileGUI.git")
+                        developerConnection.set("scm:git:ssh://github.com:OctoPvP/AgileGUI.git")
+                        url.set("https://github.com/OctoPvP/AgileGUI")
                     }
                 }
             }
         }
 
         repositories {
-            maven {
-                if (version.toString().contains("SNAPSHOT")) {
-                    credentials {
-                        username = System.getenv("REPO_USER")
-                        password = System.getenv("REPO_PASS")
+            repositories {
+                maven ("https://repo.octopvp.net/public"){
+                    name = "octomc"
+                    credentials(PasswordCredentials::class)
+                    authentication {
+                        create<BasicAuthentication>("basic")
                     }
-
-                    url = uri("https://repo.triumphteam.dev/snapshots/")
-                    return@maven
                 }
-
-                credentials {
-                    username = System.getenv("SONATYPE_USER")
-                    password = System.getenv("SONATYPE_PASSWORD")
-                }
-
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             }
         }
 
