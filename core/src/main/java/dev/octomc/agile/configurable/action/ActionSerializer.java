@@ -14,7 +14,7 @@ public class ActionSerializer implements JsonSerializer<Action>, JsonDeserialize
     public Action deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         String type = jsonObject.get("type").getAsString().toLowerCase();
-        return manager.getActionRegistry().getOrDefault(type, (jo, jdc) -> null).call(jsonObject, context);
+        return manager.getActionRegistry().getOrDefault(type, (jo, jdc) -> null).apply(jsonObject, context);
     }
 
     @Override

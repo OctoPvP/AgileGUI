@@ -12,7 +12,6 @@ import dev.octomc.agile.configurable.condition.ConditionSerializer;
 import dev.octomc.agile.configurable.condition.impl.OrCondition;
 import dev.octomc.agile.configurable.condition.impl.PermissionCondition;
 import dev.octomc.agile.util.ItemStackGsonSerializer;
-import dev.octomc.agile.util.ReturnCallback;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -24,6 +23,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 @Getter
 public class ConfigurableMenuManager {
@@ -38,8 +38,8 @@ public class ConfigurableMenuManager {
             .create();
     @Getter
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
-    private Map<String, ReturnCallback<Action, JsonObject, JsonDeserializationContext>> actionRegistry = new HashMap<>();
-    private Map<String, ReturnCallback<Condition, JsonObject, JsonDeserializationContext>> conditionRegistry = new HashMap<>();
+    private Map<String, BiFunction<JsonObject, JsonDeserializationContext, Action>> actionRegistry = new HashMap<>();
+    private Map<String, BiFunction<JsonObject, JsonDeserializationContext, Condition>> conditionRegistry = new HashMap<>();
     private Map<String, MenuConfig> menus = new HashMap<>();
 
     public ConfigurableMenuManager initDefaults() {

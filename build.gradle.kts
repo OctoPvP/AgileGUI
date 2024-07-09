@@ -24,7 +24,7 @@ subprojects {
         compileOnly("org.jetbrains:annotations:21.0.1")
         compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
-        compileOnly("com.github.cryptomorin:XSeries:11.2.0") { isTransitive = false }
+        implementation("com.github.cryptomorin:XSeries:11.2.0")
 
         val adventureVersion = "4.17.0"
         api("net.kyori:adventure-api:$adventureVersion")

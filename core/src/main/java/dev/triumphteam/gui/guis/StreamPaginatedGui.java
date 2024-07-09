@@ -1,76 +1,70 @@
 package dev.triumphteam.gui.guis;
 
-import dev.octomc.agile.util.ReturnCallback;
+import dev.octomc.agile.util.TriFunction;
 import dev.triumphteam.gui.components.InteractionModifier;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
 @Getter
-@Deprecated
 public class StreamPaginatedGui extends PaginatedGui {
-    private ReturnCallback<List<GuiItem>, Integer, StreamPaginatedGui> populateItems;
-    private ReturnCallback<Integer, Integer, StreamPaginatedGui> pages; // returns the number of pages, given the current page and the gui
+    // callbacks for:
+    // 1. populate gui (gui, player, page, expected max items) -> List<GuiItem> - throw exception if over max items is provided
+    // 2. get number of pages (gui, player, expected max items) -> int
+    private Populator populateItems;
+    private TriFunction<StreamPaginatedGui, Player, Integer, Integer> pages;
+    private Player player;
 
-    private Consumer<StreamPaginatedGui> onPopulate;
-
-    public StreamPaginatedGui(int rows, @NotNull String title,
-                              @NotNull Set<InteractionModifier> interactionModifiers,
-                              ReturnCallback<List<GuiItem>, Integer, StreamPaginatedGui> populateItems,
-                              ReturnCallback<Integer, Integer, StreamPaginatedGui> pages,
-                              Consumer<StreamPaginatedGui> onPopulate, int pageSize) {
+    public StreamPaginatedGui(int rows, int pageSize, @NotNull String title, @NotNull Set<InteractionModifier> interactionModifiers,
+                              Populator populateItems,
+                              TriFunction<StreamPaginatedGui, Player, Integer, Integer> pages,
+                              Player player
+                              ) {
         super(rows, pageSize, title, interactionModifiers);
         this.populateItems = populateItems;
         this.pages = pages;
-        this.onPopulate = onPopulate;
+        this.player = player;
     }
 
-
-    @Override
-    public int getPagesNum() {
-        //return super.getPagesNum();
-        return pages.call(getPageNum(), this);
+    public int getExpectedMaxItems() {
+        int cells = getRows() * 9;
+        Map<Integer, GuiItem> staticItems = getGuiItems();
+        System.out.println("staticItems: " + staticItems.size());
+        int available = cells - staticItems.size();
+        System.out.println("available (max): " + available);
+        return available;
     }
 
     @Override
     public List<GuiItem> getPageNum(int givenPage) {
-        List<GuiItem> list = populateItems.call(givenPage, this);
-        if (list == null) return getPageItems();
-        list.addAll(getPageItems());
-        return getPageNum(givenPage, list);
-    }
-
-
-    @Override
-    public void populatePage() {
-        super.populatePage();
-        if (onPopulate != null) onPopulate.accept(this);
+        int max = getExpectedMaxItems();
+        List<GuiItem> list = populateItems.populate(this, player, givenPage, max);
+        if (list == null) return new ArrayList<>();
+        if (list.size() > max) {
+            throw new IllegalStateException("StreamPaginatedGui: Too many items provided, max: " + max + ", provided: " + list.size());
+        }
+        return list;
     }
 
     @Override
-    public void open(@NotNull HumanEntity player, int openPage) {
-        if (player.isSleeping()) return;
-        if (openPage <= getPagesNum() || openPage > 0) pageNum = openPage;
-
-        getInventory().clear();
-        currentPage.clear();
-
-        if (pageSize == 0) pageSize = calculatePageSize();
-
-        populatePage();
-        populateGui();
-
-        player.openInventory(getInventory());
+    public int getPagesNum() {
+        return pages.apply(this, player, getExpectedMaxItems());
     }
 
     @Override
-    void updatePage() {
-        clearPage();
-        populateGui();
-        populatePage();
+    public List<GuiItem> getPageNum(int givenPage, List<GuiItem> pageItems) {
+        throw new UnsupportedOperationException("StreamPaginatedGui does not support getPageNum(int, List<GuiItem>)");
+    }
+
+    public static interface Populator {
+        List<GuiItem> populate(StreamPaginatedGui gui, Player player, int page, int max);
     }
 }

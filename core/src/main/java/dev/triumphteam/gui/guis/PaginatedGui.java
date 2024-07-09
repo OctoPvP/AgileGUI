@@ -423,7 +423,7 @@ public class PaginatedGui extends BaseGui {
         final Iterator<GuiItem> iterator = getPageNum(pageNum).iterator();
         while (iterator.hasNext()) {
             if (getGuiItem(slot) != null || getInventory().getItem(slot) != null) {
-                slot++;
+                slot++; // skip the slot if it's already taken
                 continue;
             }
 

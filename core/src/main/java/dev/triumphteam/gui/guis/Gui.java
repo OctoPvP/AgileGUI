@@ -23,6 +23,8 @@
  */
 package dev.triumphteam.gui.guis;
 
+import dev.octomc.agile.util.TriFunction;
+import dev.triumphteam.gui.builder.gui.StreamPaginatedBuilder;
 import dev.triumphteam.gui.builder.gui.PaginatedBuilder;
 import dev.triumphteam.gui.builder.gui.ScrollingBuilder;
 import dev.triumphteam.gui.builder.gui.SimpleBuilder;
@@ -30,9 +32,11 @@ import dev.triumphteam.gui.builder.gui.StorageBuilder;
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.components.InteractionModifier;
 import dev.triumphteam.gui.components.ScrollType;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -173,6 +177,23 @@ public class Gui extends BaseGui {
     @Contract(" -> new")
     public static ScrollingBuilder scrolling() {
         return scrolling(ScrollType.VERTICAL);
+    }
+
+
+    /**
+     * Creates a {@link StreamPaginatedBuilder} to build a {@link StreamPaginatedGui}
+     *
+     * @return A {@link StreamPaginatedBuilder}
+     */
+    @NotNull
+    @Contract(
+            pure = true,
+            value = "_, _, _ -> new"
+    )
+    public static StreamPaginatedBuilder streamPaginated(Player player,
+                                                         StreamPaginatedGui.Populator populate,
+                                                         TriFunction<StreamPaginatedGui, Player, Integer, Integer> pages) {
+        return new StreamPaginatedBuilder(populate, pages, player);
     }
 
 }
