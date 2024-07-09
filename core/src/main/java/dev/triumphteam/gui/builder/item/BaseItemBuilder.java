@@ -24,6 +24,7 @@
 package dev.triumphteam.gui.builder.item;
 
 import com.google.common.base.Preconditions;
+import dev.octomc.agile.util.ComponentUtils;
 import dev.triumphteam.gui.components.GuiAction;
 import dev.triumphteam.gui.components.exception.GuiException;
 import dev.triumphteam.gui.components.util.ItemNbt;
@@ -56,6 +57,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import static dev.octomc.agile.util.ComponentUtils.cleanItalics;
 
 /**
  * Contains all the common methods for the future ItemBuilders
@@ -103,12 +106,13 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      * @param component component to serialize
      * @return the serialized representation of the component
      */
-    protected @NotNull Object serializeComponent(@NotNull final Component component) {
+    protected @NotNull Object serializeComponent(@NotNull final Component component, boolean... dontClean) {
+        boolean clean = dontClean.length == 0 || !dontClean[0];
         if (VersionHelper.IS_ITEM_NAME_COMPONENT) {
             //noinspection UnstableApiUsage
-            return MinecraftComponentSerializer.get().serialize(component);
+            return MinecraftComponentSerializer.get().serialize(clean ? cleanItalics(component) : component);
         } else {
-            return GsonComponentSerializer.gson().serialize(component);
+            return GsonComponentSerializer.gson().serialize(clean ? cleanItalics(component) : component);
         }
     }
 
@@ -135,17 +139,23 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      * @since 3.0.0
      */
     @NotNull
-    @Contract("_ -> this")
-    public B name(@NotNull final Component name) {
+    @Contract("_, _ -> this")
+    public B name(@NotNull final Component name, boolean... dontClean) {
         if (meta == null) return (B) this;
+        Component clean;
+        if (dontClean.length > 0 && dontClean[0]) {
+            clean = name;
+        } else {
+            clean = cleanItalics(name);
+        }
 
         if (VersionHelper.IS_COMPONENT_LEGACY) {
-            meta.setDisplayName(Legacy.SERIALIZER.serialize(name));
+            meta.setDisplayName(Legacy.SERIALIZER.serialize(clean));
             return (B) this;
         }
 
         try {
-            DISPLAY_NAME_FIELD.set(meta, this.serializeComponent(name));
+            DISPLAY_NAME_FIELD.set(meta, this.serializeComponent(clean));
         } catch (IllegalAccessException exception) {
             exception.printStackTrace();
         }
@@ -188,18 +198,21 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      * @since 3.0.0
      */
     @NotNull
-    @Contract("_ -> this")
-    public B lore(@NotNull final List<@Nullable Component> lore) {
+    @Contract("_, _ -> this")
+    public B lore(@NotNull final List<@Nullable Component> lore, boolean... dontClean) {
         if (meta == null) return (B) this;
+        boolean clean = dontClean.length == 0 || !dontClean[0];
 
         if (VersionHelper.IS_COMPONENT_LEGACY) {
-            meta.setLore(lore.stream().filter(Objects::nonNull).map(Legacy.SERIALIZER::serialize).collect(Collectors.toList()));
+            meta.setLore(lore.stream().filter(Objects::nonNull).map(component -> {
+                return Legacy.SERIALIZER.serialize(clean ? cleanItalics(component) : component);
+            }).collect(Collectors.toList()));
             return (B) this;
         }
 
         final List<Object> jsonLore = lore.stream()
             .filter(Objects::nonNull)
-            .map(this::serializeComponent)
+            .map(component -> this.serializeComponent(component, !clean))
             .collect(Collectors.toList());
 
         try {
@@ -219,8 +232,8 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      * @since 3.0.0
      */
     @NotNull
-    @Contract("_ -> this")
-    public B lore(@NotNull final Consumer<List<@Nullable Component>> lore) {
+    @Contract("_, _ -> this")
+    public B lore(@NotNull final Consumer<List<@Nullable Component>> lore, boolean... dontClean) {
         if (meta == null) return (B) this;
 
         List<Component> components;
@@ -236,6 +249,10 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
                 components = new ArrayList<>();
                 exception.printStackTrace();
             }
+        }
+
+        if (dontClean.length == 0 || !dontClean[0]) {
+            components = components.stream().map(ComponentUtils::cleanItalics).collect(Collectors.toList());
         }
 
         lore.accept(components);
@@ -588,7 +605,7 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      *
      * @param name the display name of the item
      * @return {@link ItemBuilder}
-     * @deprecated In favor of {@link BaseItemBuilder#name(Component)}, will be removed in 3.0.1
+     * @deprecated In favor of {@link BaseItemBuilder#name(Component,boolean...)}, will be removed in 3.0.1
      */
     @Deprecated
     public B setName(@NotNull final String name) {
@@ -614,7 +631,7 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      *
      * @param lore the lore lines to add
      * @return {@link ItemBuilder}
-     * @deprecated In favor of {@link ItemBuilder#lore(Consumer)}, will be removed in 3.0.1
+     * @deprecated In favor of {@link ItemBuilder#lore(Consumer,boolean...)}, will be removed in 3.0.1
      */
     @Deprecated
     public B addLore(@NotNull final String... lore) {
@@ -626,7 +643,7 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      *
      * @param lore A {@link List} with the lore lines to add
      * @return {@link ItemBuilder}
-     * @deprecated In favor of {@link ItemBuilder#lore(Consumer)}, will be removed in 3.0.1
+     * @deprecated In favor of {@link ItemBuilder#lore(Consumer,boolean...)}, will be removed in 3.0.1
      */
     @Deprecated
     public B addLore(@NotNull final List<String> lore) {
@@ -653,7 +670,7 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
      *
      * @param lore A {@link List} with the lore lines
      * @return {@link ItemBuilder}
-     * @deprecated In favor of {@link ItemBuilder#lore(List)}, will be removed in 3.0.1
+     * @deprecated In favor of {@link ItemBuilder#lore(List,boolean...)}, will be removed in 3.0.1
      */
     @Deprecated
     public B setLore(@NotNull final List<String> lore) {
