@@ -79,6 +79,19 @@ public abstract class BaseGuiBuilder<G extends BaseGui, B extends BaseGuiBuilder
     }
 
     /**
+     * Sets the title for the GUI
+     * This will be either a Component or a String
+     *
+     * @param title The GUI title
+     * @return The builder
+     */
+    @NotNull
+    @Contract("_ -> this")
+    public B title(@NotNull final String title) {
+        return title(Component.text(title));
+    }
+
+    /**
      * Disable item placement inside the GUI
      *
      * @return The builder
