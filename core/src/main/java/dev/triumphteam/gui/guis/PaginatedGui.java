@@ -54,17 +54,6 @@ public class PaginatedGui extends BaseGui {
     protected final Map<Integer, GuiItem> currentPage;
 
     protected int pageSize;
-    /**
-     * -- GETTER --
-     *  Gets the page number
-     *
-     *
-     * -- SETTER --
-     *  Sets the page number
-     *
-     @return The current page number
-      * @param pageNum Sets the current page to be the specified number
-     */
     @Setter
     @Getter
     protected int pageNum = 1;
