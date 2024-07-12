@@ -21,7 +21,7 @@ subprojects {
     version = "1.3.0"
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:21.0.1")
+        compileOnly("org.jetbrains:annotations:24.1.0")
         compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
         implementation("com.github.cryptomorin:XSeries:11.2.0")
