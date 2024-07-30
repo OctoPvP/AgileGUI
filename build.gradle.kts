@@ -18,11 +18,11 @@ subprojects {
     }
 
     group = "dev.octomc"
-    version = "1.3.0"
+    version = "1.3.0-hack"
 
     dependencies {
         compileOnly("org.jetbrains:annotations:24.1.0")
-        compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
+        compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
 
         implementation("com.github.cryptomorin:XSeries:11.2.0")
 
@@ -30,6 +30,7 @@ subprojects {
         api("net.kyori:adventure-api:$adventureVersion")
         api("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
         api("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+        api("net.kyori:adventure-text-minimessage:$adventureVersion")
         api("net.kyori:adventure-platform-bukkit:4.3.3")
     }
 

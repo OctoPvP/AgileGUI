@@ -44,6 +44,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -163,6 +164,12 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
         return (B) this;
     }
 
+    @NotNull
+    @Contract("_, _ -> this")
+    public B name(@NotNull final String name, boolean... dontClean) {
+        return name(Component.text(name), dontClean);
+    }
+
     /**
      * Sets the amount of items
      *
@@ -188,6 +195,12 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
     @Contract("_ -> this")
     public B lore(@Nullable final Component @NotNull ... lore) {
         return lore(Arrays.asList(lore));
+    }
+
+    @NotNull
+    @Contract("_ -> this")
+    public B lore(@Nullable final String @NotNull ... lore) {
+        return lore(Arrays.stream(lore).filter(Objects::nonNull).map(Component::text).toArray(Component[]::new));
     }
 
     /**

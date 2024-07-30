@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ItemStackGsonSerializer implements JsonSerializer<ItemStack>, JsonDeserializer<ItemStack> {
-    @Override
+public class ItemStackGsonSerializer /*implements JsonSerializer<ItemStack>, JsonDeserializer<ItemStack>*/ {
+    /*@Override
     public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonPrimitive()) {
             String base64 = json.getAsString();
@@ -54,7 +54,7 @@ public class ItemStackGsonSerializer implements JsonSerializer<ItemStack>, JsonD
             ItemStack item = new ItemStack(Material.valueOf(material), amount);
             ItemMeta meta = item.getItemMeta();
             if (name != null) {
-                meta.displayName(name);
+                meta.setDisplayName(name);
             }
             for (String flag : flags) {
                 meta.addItemFlags(ItemFlag.valueOf(flag));
@@ -75,5 +75,5 @@ public class ItemStackGsonSerializer implements JsonSerializer<ItemStack>, JsonD
     @Override
     public JsonElement serialize(ItemStack src, Type typeOfSrc, JsonSerializationContext context) {
         return new JsonPrimitive(Base64Utils.toBase64(src));
-    }
+    }*/
 }

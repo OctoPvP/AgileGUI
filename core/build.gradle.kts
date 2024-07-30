@@ -97,6 +97,6 @@ tasks {
         val signingPassword = System.getenv("GPG_PASS")
         val secretKey = System.getenv("GPG_SECRET_KEY")
         useInMemoryPgpKeys(signingKey, secretKey, signingPassword)*/
-        sign(publishing.publications["maven"])
+        //sign(publishing.publications["maven"])
     }
 }

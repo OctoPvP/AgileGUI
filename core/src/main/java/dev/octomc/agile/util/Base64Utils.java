@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class Base64Utils {
+public class Base64Utils {/*
     public static ItemStack fromBase64(String base64) {
         byte[] data = Base64.getDecoder().decode(base64);
         if (VersionHelper.IS_ITEM_BYTES_API) {
@@ -39,5 +39,5 @@ public class Base64Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
+    }//*/
 }

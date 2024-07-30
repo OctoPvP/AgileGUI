@@ -23,6 +23,7 @@
  */
 package dev.triumphteam.gui.builder.item;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import dev.triumphteam.gui.components.util.SkullUtil;
@@ -73,6 +74,18 @@ public class ItemBuilder extends BaseItemBuilder<ItemBuilder> {
     @Contract("_ -> new")
     public static ItemBuilder from(@NotNull final Material material) {
         return new ItemBuilder(new ItemStack(material));
+    }
+
+    /**
+     * Alternative method to create {@link ItemBuilder}
+     *
+     * @param material The {@link Material} you want to create an item from
+     * @return A new {@link ItemBuilder}
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static ItemBuilder from(@NotNull final XMaterial material) {
+        return new ItemBuilder(new ItemStack(material.parseMaterial()));
     }
 
     /**
