@@ -420,8 +420,13 @@ public class PaginatedGui extends BaseGui {
     protected void populatePage() {
         // Adds the paginated items to the page
         int slot = 0;
+        final int inventorySize = getInventory().getSize();
         final Iterator<GuiItem> iterator = getPageNum(pageNum).iterator();
         while (iterator.hasNext()) {
+            if (slot >= inventorySize) {
+                break; // Exit the loop if slot exceeds inventory size
+            }
+
             if (getGuiItem(slot) != null || getInventory().getItem(slot) != null) {
                 slot++; // skip the slot if it's already taken
                 continue;
