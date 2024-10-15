@@ -53,6 +53,13 @@ public class PaginatedGui extends BaseGui {
     // Saves the current page items and it's slot
     protected final Map<Integer, GuiItem> currentPage;
 
+    /**
+     * -- GETTER --
+     *  Gets the page size
+     *
+     * @return The page size
+     */
+    @Getter
     protected int pageSize;
     @Setter
     @Getter
@@ -411,6 +418,7 @@ public class PaginatedGui extends BaseGui {
      * @return The pages number
      */
     public int getPagesNum() {
+        if (pageSize == 0) pageSize = calculatePageSize();
         return (int) Math.ceil((double) pageItems.size() / pageSize);
     }
 
@@ -470,15 +478,6 @@ public class PaginatedGui extends BaseGui {
         clearPageItems(false);
     }
 
-
-    /**
-     * Gets the page size
-     *
-     * @return The page size
-     */
-    int getPageSize() {
-        return pageSize;
-    }
 
     /**
      * Updates the page content
