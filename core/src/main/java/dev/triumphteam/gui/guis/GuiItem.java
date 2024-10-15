@@ -135,8 +135,19 @@ public class GuiItem {
      * Replaces the {@link GuiAction} of the current GUI Item
      *
      * @param action The new {@link GuiAction} to set
+     * @return The current {@link GuiItem}
      */
-    public void setAction(@Nullable final GuiAction<@NotNull InventoryClickEvent> action) {
+    public GuiItem setAction(@Nullable final GuiAction<@NotNull InventoryClickEvent> action) {
         this.action = action;
+        return this;
+    }
+
+    /**
+     * Replaces the {@link GuiAction} of the current GUI Item
+     * @param action The new {@link GuiAction} to set
+     * @return The current {@link GuiItem}
+     */
+    public GuiItem click(@NotNull final GuiAction<@NotNull InventoryClickEvent> action) {
+        return setAction(action);
     }
 }
