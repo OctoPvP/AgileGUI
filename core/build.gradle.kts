@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.mojang:authlib:1.5.25")
+    compileOnly("com.mojang:authlib:6.0.56")
 }
 
 val javaComponent: SoftwareComponent = components["java"]
