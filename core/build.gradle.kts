@@ -1,6 +1,7 @@
 plugins {
     `maven-publish`
     signing
+    id("com.gradleup.shadow") version "8.3.3"
     id("io.freefair.lombok") version "8.10.2"
 }
 
@@ -11,6 +12,7 @@ repositories {
 
 dependencies {
     compileOnly("com.mojang:authlib:6.0.56")
+    implementation("com.github.cryptomorin:XSeries:11.3.0")
 }
 
 val javaComponent: SoftwareComponent = components["java"]
@@ -21,7 +23,13 @@ java {
 }
 
 tasks {
+    shadowJar {
+        archiveClassifier.set("")
+    }
 
+    build {
+        dependsOn(shadowJar)
+    }
     val sourcesJar by creating(Jar::class) {
         archiveClassifier.set("sources")
         from(sourceSets.main.get().allSource)
@@ -79,7 +87,7 @@ tasks {
 
         repositories {
             repositories {
-                maven ("https://repo.octopvp.net/public"){
+                maven("https://repo.octopvp.net/public") {
                     name = "octomc"
                     credentials(PasswordCredentials::class)
                     authentication {
