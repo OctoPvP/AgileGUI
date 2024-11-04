@@ -1,7 +1,7 @@
 plugins {
     `maven-publish`
     signing
-    id("com.gradleup.shadow") version "8.3.3"
+    id("com.gradleup.shadow") version "8.3.5"
     id("io.freefair.lombok") version "8.10.2"
 }
 
