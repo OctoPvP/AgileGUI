@@ -22,7 +22,7 @@ subprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:24.1.0")
-        compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
         val adventureVersion = "4.17.0"
         compileOnly("net.kyori:adventure-api:$adventureVersion")
